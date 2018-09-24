@@ -4,7 +4,7 @@
 
 ### Closed address hashing
 
-Compile and run the `Lab2_closed_address_hashing.c`. It will then automatically run the provided test cases. To test it manually, comment every lines that has `freeopen` command(49,50,101). 
+Compile and run the `Lab2_closed_address_hashing.c`. It will then automatically run the provided test cases. To test it manually, comment every lines that has `freeopen` command(line 49,50,101). 
 
 Test cases has been generated on `Random_tc_generated_load75%.txt` for the initial list of students to be put on the hashtable. 
 
