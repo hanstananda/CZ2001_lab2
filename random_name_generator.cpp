@@ -39,11 +39,11 @@ int main()
 	int y=0;
 	for(y=x;y<=gen_needed;y++)
 	{
-		int a=rand()%x;
+		int a=rand()%x+1;
 		int b=a;
 		while(b==a)
 		{
-			b=rand()%x;
+			b=rand()%x+1;
 		}
 		if(double_check[mp(a,b)]==1)
 		{

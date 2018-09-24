@@ -47,7 +47,7 @@ int hashtable_size = 1<<16;
 
 int main() {
 	freopen("Random_tc_generated_load75%.txt","r",stdin); 
- 	//freopen("out.txt","w",stdout);
+ 	freopen("out.txt","w",stdout);
 	srand(time(NULL));
 	int value;
     char in[100];
@@ -76,7 +76,7 @@ int main() {
         //printf("hashed into: %d\n",hashed_value);
         LinkedList *ll = &storage[hashed_value];
         //printf("\"%s\"",in);
-        clash_check[hashed_value]=clash_check[hashed_value]+1;
+        /*clash_check[hashed_value]=clash_check[hashed_value]+1;
         if(ll->size>0)
         {
         	//printf("clash %d!\n",ll->size);
@@ -85,22 +85,52 @@ int main() {
 				clash_max=ll->size;
 				clash_max_idx=hashed_value;
 			}
-		}
+		}*/
         int insert_status=insertNode(ll,ll->size,value,&in[0]);
         if(insert_status==-1)
         {
         	printf("Insert Fail!\n");
 		}
-        // Search dummy
-        // int cmp_num;
-		// ListNode *tmp = search_name_in_Node(&ll,in,&cmp_num);
-        // printf("in linkedlist: %s\n",tmp->name);
-		//printList(&storage[hashed_value]);
     }
 	end=clock();
 	cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
-	printList(&storage[clash_max_idx]);
+	//printList(&storage[clash_max_idx]);
 	printf("Time used to map the value: %.8lf\n",cpu_time_used);
+	
+	// Query testing area
+	freopen("Random_query_generated.txt","r",stdin); 
+	scanf("%d",&n);
+	start=clock();
+	int cmp_total=0;
+	for(x=0;x<n;x++)
+    {
+        scanf("%s %s",tmp1,tmp2);
+        strcat(tmp1," ");
+        strcat(tmp1,tmp2);
+        strcpy(in,tmp1);
+        int hashed_value=bsdChecksumFromstr(in);
+        // Search dummy
+        int cmp_num=0;
+        LinkedList *ll = &storage[hashed_value];
+		ListNode *tmp = search_name_in_Node(ll,in,&cmp_num);
+        if(tmp!=NULL)
+        {
+        	printf("%s is found with value of %d\n",tmp->name,tmp->item);
+        	printf("%d compariosn performed\n",cmp_num);
+		}
+		else
+		{
+			printf("%s is not found!\n",in);
+			printf("%d compariosn performed\n",cmp_num);
+		}
+		cmp_total+=cmp_num;
+		//printList(&storage[hashed_value]);
+        
+    }
+	end=clock();
+	cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
+	printf("%d queries performed and %d comparison performed in total\n",n,cmp_total);
+	printf("Time used to finish all queries: %.8lf\n",cpu_time_used);
     return 0;
 }
 
@@ -166,7 +196,10 @@ ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison)
 	ListNode *temp;
 
     if (ll == NULL)
-        return NULL;
+    {
+    	(*num_of_comparison)++;
+    	return NULL;
+	}
     temp = ll->head;	
     while (temp!=NULL ){
         (*num_of_comparison)++;

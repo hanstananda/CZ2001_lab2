@@ -23,36 +23,42 @@ using namespace std;
 
 char seed1[100000][50];
 char seed2[100000][50];
-map<pii,bool> double_check;
 
 int main()
 {
-	freopen("Random_names_2.txt","r",stdin); 
- 	freopen("Random_names_generated.txt","w",stdout);
+	freopen("Random_tc_generated_load75%.txt","r",stdin); 
+ 	freopen("Random_query_generated.txt","w",stdout);
  	int x=1;
  	int gen_needed=100000;
-	 while(scanf("%s %s",seed1[x],seed2[x])!=EOF)
+ 	bool successful=1;
+	int dummy;
+	printf("%d\n",gen_needed);
+	while(scanf("%s %s %d",seed1[x],seed2[x],&dummy)!=EOF)
  	{
- 		printf("%s %s\n",seed1[x],seed2[x]);
+ 		//printf("%s %s\n",seed1[x],seed2[x]);
  		x++;
 	}
 	int y=0;
-	for(y=x;y<=gen_needed;y++)
+	for(y=0;y<=gen_needed;y++)
 	{
-		int a=rand()%x;
+		int a=rand()%x+1;
 		int b=a;
-		while(b==a)
+		if(successful)
 		{
-			b=rand()%x;
+			//choose any ppl randomly in list
+			printf("%s %s\n",seed1[a],seed2[b]);
 		}
-		if(double_check[mp(a,b)]==1)
+		else
 		{
-			y--;
-			continue;
+			//randomly find ppl that is not available in the list
+			
+			while(b==a)
+			{
+				b=rand()%x+1;
+			}
+			printf("%s %s\n",seed1[a],seed2[b]);
 		}
 		
-		double_check[mp(a,b)]=1;
-		printf("%s %s\n",seed1[a],seed2[b]);
 	}
 	return 0;
 }
