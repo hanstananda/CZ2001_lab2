@@ -47,7 +47,8 @@ int hashtable_size = 1<<16;
 
 int main() {
 	freopen("Random_tc_generated_load75%.txt","r",stdin); 
- 	freopen("out.txt","w",stdout);
+ 	//freopen("out.txt","w",stdout);
+	freopen("out1.txt","w",stdout);
 	srand(time(NULL));
 	int value;
     char in[100];
@@ -98,7 +99,8 @@ int main() {
 	printf("Time used to map the value: %.8lf\n",cpu_time_used);
 	
 	// Query testing area
-	freopen("Random_query_generated.txt","r",stdin); 
+	freopen("Random_fail_query_generated.txt","r",stdin); 
+	//freopen("Random_query_generated.txt","r",stdin); 
 	scanf("%d",&n);
 	start=clock();
 	int cmp_total=0;

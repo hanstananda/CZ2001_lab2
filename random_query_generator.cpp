@@ -27,10 +27,10 @@ char seed2[100000][50];
 int main()
 {
 	freopen("Random_tc_generated_load75%.txt","r",stdin); 
- 	freopen("Random_query_generated.txt","w",stdout);
+ 	freopen("Random_fail_query_generated.txt","w",stdout);
  	int x=1;
  	int gen_needed=100000;
- 	bool successful=1;
+ 	bool successful=0;
 	int dummy;
 	printf("%d\n",gen_needed);
 	while(scanf("%s %s %d",seed1[x],seed2[x],&dummy)!=EOF)
