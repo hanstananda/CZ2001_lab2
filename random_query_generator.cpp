@@ -23,6 +23,7 @@ using namespace std;
 
 char seed1[100000][50];
 char seed2[100000][50];
+char vocal[10]="aiueo";
 
 int main()
 {
@@ -56,7 +57,7 @@ int main()
 			{
 				b=rand()%x+1;
 			}
-			printf("%s %s\n",seed1[a],seed2[b]);
+			printf("%s %s%c\n",seed1[a],seed2[b],vocal[rand()%5]);
 		}
 		
 	}

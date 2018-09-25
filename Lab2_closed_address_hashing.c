@@ -118,12 +118,12 @@ int main() {
         if(tmp!=NULL)
         {
         	printf("%s is found with value of %d\n",tmp->name,tmp->item);
-        	printf("%d compariosn performed\n",cmp_num);
+        	printf("%d comparison performed\n",cmp_num);
 		}
 		else
 		{
 			printf("%s is not found!\n",in);
-			printf("%d compariosn performed\n",cmp_num);
+			printf("%d comparison performed\n",cmp_num);
 		}
 		cmp_total+=cmp_num;
 		//printList(&storage[hashed_value]);
@@ -203,7 +203,7 @@ ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison)
     	return NULL;
 	}
     temp = ll->head;	
-    while (temp!=NULL ){
+    do {
         (*num_of_comparison)++;
 		if (temp == NULL)
             return NULL;
@@ -212,8 +212,7 @@ ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison)
         	return temp;
 		}
 		temp = temp->next;
-    }
-
+    }while(temp!=NULL );
     return temp;
 }
 
