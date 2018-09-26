@@ -15,7 +15,7 @@ int bsdChecksumFromstr(char *input) /* The file handle for input data */
     return checksum;
 }
 
-// COPIED FROM CZ1007
+// TAKEN FROM CZ1007
 
 typedef struct _listnode
 {
@@ -43,30 +43,44 @@ int removeNode(LinkedList *ll, int index);
 
 int hashtable_size = 1<<16;
 
-//////////////////////// MAIN FUNCTION ///////////////////////////////////////////
+//////////////////////// SUB FUNCTIONS ///////////////////////////////////////////
+
+// Set the output file name to contain current time timestamp
 char* outfilename;
+void set_outfilename()
+{
+    time_t rawtime;
+    time (&rawtime);
+    outfilename = malloc(sizeof(ctime(&rawtime)));
+    outfilename=ctime(&rawtime);
+    int outfile_len=strlen(outfilename);
+    while(!(outfilename[outfile_len]>='0'&&outfilename[outfile_len]<='9'))
+    {
+        outfilename[outfile_len]='\0';
+        outfile_len--;
+    }
+    strcat(outfilename,".txt");
+}
+
+//////////////////////// MAIN FUNCTION ///////////////////////////////////////////
+
 
 int main() {
+    ////////// Start of I/O redirection for automation testing
+    // Comment all these lines below if you want to test it manually
 	freopen("Random_tc_generated_load75%.txt","r",stdin); 
  	//freopen("out.txt","w",stdout);
-	time_t rawtime;
-  	time (&rawtime);
-	malloc(sizeof(ctime(&rawtime)));
-	outfilename=ctime(&rawtime);
-	int outfile_len=strlen(outfilename);
-	while(!(outfilename[outfile_len]>='0'&&outfilename[outfile_len]<='9'))
-	{
-		outfilename[outfile_len]='\0';
-		outfile_len--;
-	}
-	strcat(outfilename,".txt");
+    set_outfilename();
 	freopen(outfilename,"w",stdout);
-	srand(time(NULL));
-	int value;
+    ////////// End of I/O redirection for automation testing
+
+
+    ////////// Start of Variables Initialization
+    // for input
+	int n,value;
     char in[100];
     char tmp1[50],tmp2[50];
-    int n;
-    scanf("%d",&n);
+    // hashtable init
     LinkedList storage[hashtable_size];
     int x;
 	for(x=0;x<hashtable_size;x++)
@@ -74,10 +88,16 @@ int main() {
         storage[x].head = NULL;
         storage[x].size = 0;
     }
+    // clock init
+    srand(time(NULL));
     clock_t start,end;
     double cpu_time_used;
-    int debug=0;
-    int clash_check[hashtable_size],clash_max=0,clash_max_idx=0;
+    int clash_check[hashtable_size],clash_max=0,clash_max_idx=0;  // to count no. of clash if neeeded
+    ////////// End of Variables Initialization
+
+
+    ////////// Start of Setting the initial hashtable
+    scanf("%d",&n);
     start=clock();
     for(x=0;x<n;x++)
     {
@@ -100,6 +120,7 @@ int main() {
 			}
 		}*/
         int insert_status=insertNode(ll,ll->size,value,&in[0]);
+        // Error occured
         if(insert_status==-1)
         {
         	printf("Insert Fail!\n");
@@ -109,10 +130,17 @@ int main() {
 	cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
 	//printList(&storage[clash_max_idx]);
 	printf("Time used to map the value: %.8lf\n",cpu_time_used);
-	
-	// Query testing area
+    ////////// End of Setting the initial hashtable
+
+
+    ////////// Start of Query testing area
+
+    ////////// Start of I/O redirection for automation testing
+    // Comment all these lines below if you want to test it manually
 	freopen("Random_fail_query_generated.txt","r",stdin); 
-	//freopen("Random_query_generated.txt","r",stdin); 
+	//freopen("Random_query_generated.txt","r",stdin);
+    ////////// End of I/O redirection for automation testing
+
 	scanf("%d",&n);
 	start=clock();
 	int cmp_total=0;
@@ -141,8 +169,12 @@ int main() {
 		//printList(&storage[hashed_value]);
         
     }
-	end=clock();
-	cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
+    end=clock();
+    cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
+    ////////// End of Query testing area
+
+
+    ////////// Summary
 	printf("%d queries performed and %d comparison performed in total\n",n,cmp_total);
 	printf("Time used to finish all queries: %.8lf\n",cpu_time_used);
     return 0;
