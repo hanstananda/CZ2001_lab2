@@ -168,6 +168,7 @@ int main() {
         strcat(tmp1," ");
         strcat(tmp1,tmp2);
         strcpy(full_name,tmp1);
+        strcat(in,full_name);
         ////////// End of input scanning and parsing
         insert_into_hashtable(in,value,full_name);
     }
@@ -191,7 +192,11 @@ int main() {
 	start=clock();
 	for(x=0;x<n;x++)
     {
-        scanf("%s",in);
+        scanf("%s %s %s",in,tmp1,tmp2);
+        strcat(tmp1," ");
+        strcat(tmp1,tmp2);
+        strcpy(full_name,tmp1);
+        strcat(in,full_name);
         search_in_hashtable(in);
     }
     end=clock();
