@@ -200001,4 +200001,4 @@ not found!
 not found!
 1 comparison performed
 100000 queries performed and 102942 comparison performed in total
-Time used to finish all queries: 0.05456800
+Time used to finish all queries: 0.05148100
