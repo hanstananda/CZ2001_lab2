@@ -56,7 +56,7 @@ int main()
         printf("%s %s %s %d\n",matric_num,seed1[x],seed2[x],score);
         x++;
     }
-    int y=0;
+    int y;
     for(y=x;y<=gen_needed;y++)
     {
         int a=rand()%x+1;
