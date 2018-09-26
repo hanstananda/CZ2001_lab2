@@ -139,7 +139,7 @@ void set_outfilename()
 int main() {
     ////////// Start of I/O redirection for automation testing
     // Comment all these lines below if you want to test it manually
-	freopen("Random_tc_generated_load75%.txt","r",stdin); 
+	freopen("Random_tc_generated_load25%.txt","r",stdin); 
  	//freopen("out.txt","w",stdout);
     set_outfilename();
 	freopen(outfilename,"w",stdout);
@@ -174,7 +174,7 @@ int main() {
     }
 	end=clock();
 	cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
-    printf("Number of clashes: %d\n",num_clash);
+    printf("Number of clashes: %d, no of items: %d\n",num_clash,n);
 	//printList(&storage[clash_max_idx]);
 	printf("Time used to map the value: %.8lf\n",cpu_time_used);
     ////////// End of Setting the initial hashtable
@@ -184,8 +184,8 @@ int main() {
 
     ////////// Start of I/O redirection for automation testing
     // Comment all these lines below if you want to test it manually
-	//freopen("Random_success_query_generated_new.txt","r",stdin);
 	freopen("Random_fail_query_generated_new.txt","r",stdin);
+	//freopen("Random_fail_query_generated_new.txt","r",stdin);
     ////////// End of I/O redirection for automation testing
 
 	scanf("%d",&n);

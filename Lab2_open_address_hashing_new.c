@@ -134,7 +134,7 @@ char* outfilename;
 int main() {
     ////////// Start of I/O redirection for automation testing
     // Comment all these lines below if you want to test it manually
-    freopen("Random_tc_generated_load75%.txt","r",stdin);
+    freopen("Random_tc_generated_load25%.txt","r",stdin);
     //freopen("out.txt","w",stdout);
     set_outfilename();
     freopen(outfilename,"w",stdout);

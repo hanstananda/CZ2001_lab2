@@ -44,10 +44,10 @@ void matric_randomizer(char* matric_num)
 int main()
 {
     freopen("Random_names_2.txt","r",stdin);
-    freopen("Random_tc_generated_load75%.txt","w",stdout);
+    freopen("Random_tc_generated_load25%.txt","w",stdout);
     int x=1;
     int score;
-    int gen_needed=3<<14;
+    int gen_needed=1<<14;
     char matric_num[100];
     printf("%d\n",gen_needed);
     while(scanf("%s %s",seed1[x],seed2[x])!=EOF)
