@@ -129,7 +129,7 @@ void set_outfilename()
         outfilename[outfile_len]='\0';
         outfile_len--;
     }
-    strcat(outfilename,".txt");
+    strcat(outfilename," closed address hashing output.txt");
 }
 
 
@@ -183,8 +183,8 @@ int main() {
 
     ////////// Start of I/O redirection for automation testing
     // Comment all these lines below if you want to test it manually
-	freopen("Random_success_query_generated.txt","r",stdin);
-	//freopen("Random_query_generated.txt","r",stdin);
+	//freopen("Random_success_query_generated.txt","r",stdin);
+	freopen("Random_fail_query_generated.txt","r",stdin);
     ////////// End of I/O redirection for automation testing
 
 	scanf("%d",&n);

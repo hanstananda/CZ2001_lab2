@@ -23,6 +23,7 @@ typedef struct node
     char key[100];
     char name[100];
     int item;
+    int status; // not inserted =0, inserted = 1, deleted=2
 } hashnode;
 
 //////////////////////// HashTable FUNCTIONS ///////////////////////////////////////////
@@ -37,6 +38,7 @@ void hashtable_init()
     for(x=0;x<hashtable_size;x++)
     {
         storage[x].item = 0;
+        storage[x].status = 0;
     }
 }
 
@@ -50,15 +52,16 @@ void insert_into_hashtable(char *key,int data1,char* data2)
     hashnode tmp = storage[hashed_value];
     int linear_probing_value = hashed_value;
     int full=0;
-    if(storage[linear_probing_value].item!=0)
+    if(storage[linear_probing_value].status!=0)
     {
         num_clash++;
     }
-    while(storage[linear_probing_value].item!=0)
+    while(storage[linear_probing_value].status!=0)
     {
         if(linear_probing_value==hashed_value&&full)
         {
             printf("Error! Table is full!");
+            return;
         }
         full=1;
         linear_probing_value++;
@@ -66,11 +69,45 @@ void insert_into_hashtable(char *key,int data1,char* data2)
         num_shift++;
     }
     ///////// Inserting value to hashtable
+    storage[linear_probing_value].status=1;
     storage[linear_probing_value].item=data1;
     strcpy(storage[linear_probing_value].key,key);
     strcpy(storage[linear_probing_value].name,data2);
 }
 
+int cmp_total=0;
+void search_in_hashtable(char * key)
+{
+    int hashed_value=bsdChecksumFromstr(key);
+    int cmp_num=1;
+    hashnode *tmp = &storage[hashed_value];
+    int linear_probing_value = hashed_value;
+    int full=0;
+    while(tmp->status!=0)
+    {
+        if(linear_probing_value==hashed_value&&full)
+        {
+            break;
+        }
+        if(tmp->status==1&&strcmp(tmp->key,key)==0)
+        {
+            printf("Matriculation id %s with name %s is found with value of %d\n",tmp->key ,tmp->name,tmp->item);
+            printf("%d comparison performed\n",cmp_num);
+            cmp_total+=cmp_num;
+            return;
+        }
+        full=1;
+        linear_probing_value++;
+        linear_probing_value &= 0xffff;
+        cmp_num++;
+        tmp=&storage[linear_probing_value];
+    }
+    printf("%s is not found!\n",key);
+    printf("%d comparison performed\n",cmp_num);
+    cmp_total+=cmp_num;
+    return;
+    //printList(&storage[hashed_value]);
+}
 
 //////////////////////// OTHER FUNCTIONS ///////////////////////////////////////////
 
@@ -88,7 +125,7 @@ void set_outfilename()
         outfilename[outfile_len]='\0';
         outfile_len--;
     }
-    strcat(outfilename,".txt");
+    strcat(outfilename," open address hashing output.txt");
 }
 
 //////////////////////// MAIN FUNCTION ///////////////////////////////////////////
@@ -100,7 +137,7 @@ int main() {
     freopen("Random_tc_generated_load75%.txt","r",stdin);
     //freopen("out.txt","w",stdout);
     set_outfilename();
-    //freopen(outfilename,"w",stdout);
+    freopen(outfilename,"w",stdout);
     ////////// End of I/O redirection for automation testing
 
     ////////// Start of Variables Initialization
@@ -141,8 +178,8 @@ int main() {
 
     ////////// Start of I/O redirection for automation testing
     // Comment all these lines below if you want to test it manually
-    freopen("Random_success_query_generated.txt","r",stdin);
-    //freopen("Random_query_generated.txt","r",stdin);
+    freopen("Random_fail_query_generated.txt","r",stdin);
+    //freopen("Random_success_query_generated.txt","r",stdin);
     ////////// End of I/O redirection for automation testing
 
     scanf("%d",&n);

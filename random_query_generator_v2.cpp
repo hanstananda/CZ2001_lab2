@@ -41,8 +41,8 @@ char matric_num_list[100010][100];
 int main()
 {
     freopen("Random_tc_generated_load75%.txt","r",stdin);
-    //freopen("Random_fail_query_generated.txt","w",stdout);
-    freopen("Random_success_query_generated.txt","w",stdout);
+    freopen("Random_fail_query_generated.txt","w",stdout);
+    //freopen("Random_success_query_generated.txt","w",stdout);
     int x=1;
     int gen_needed=100000;
     bool successful=1;
@@ -77,7 +77,6 @@ int main()
             {
                 matric_randomizer(matric_num);
             }
-            double_check_matric[(string)matric_num]=1;
             printf("%s\n",matric_num);
         }
     }
