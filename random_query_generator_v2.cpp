@@ -35,7 +35,7 @@ void matric_randomizer(char* matric_num)
     // end of string marking
     matric_num[9]='\0';
 }
-map<string,bool> double_check;
+map<string,bool> double_check_matric;
 char matric_num_list[100010][100];
 
 int main()
@@ -45,24 +45,27 @@ int main()
     freopen("Random_success_query_generated.txt","w",stdout);
     int x=1;
     int gen_needed=100000;
-    bool successful=0;
+    bool successful=1;
     int dummy;
     char seed1[100],seed2[100];
     char matric_num[100];
     printf("%d\n",gen_needed);
-    while(scanf("%s %s %s %d",matric_num_list[x],seed1,seed2,&dummy)!=EOF)
+    int n;
+    scanf("%d",&n);
+    for(x=1;x<=n;x++)
     {
-        double_check[(string)matric_num_list[x]]=1;
+        scanf("%s %s %s %d",matric_num_list[x],seed1,seed2,&dummy);
+        double_check_matric[(string)matric_num_list[x]]=1;
         //printf("%s %s\n",seed1[x],seed2[x]);
-        x++;
     }
+    //printf("%d\n",n);
     int y=0;
     for(y=0;y<gen_needed;y++)
     {
 
         if(successful)
         {
-            int a=rand()%x+1;
+            int a=rand()%n+1;
             //choose any ppl randomly in list
             printf("%s\n",matric_num_list[a]);
         }
@@ -70,10 +73,11 @@ int main()
         {
             //randomly find ppl that is not available in the list
             matric_randomizer(matric_num);
-            while(double_check[(string)matric_num])
+            while(double_check_matric[(string)matric_num])
             {
                 matric_randomizer(matric_num);
             }
+            double_check_matric[(string)matric_num]=1;
             printf("%s\n",matric_num);
         }
     }

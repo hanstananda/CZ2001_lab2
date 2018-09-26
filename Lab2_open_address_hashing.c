@@ -31,41 +31,45 @@ int hashtable_size = 1<<16;
 char* outfilename;
 
 int main() {
-    freopen("Random_tc_generated_load75%.txt", "r", stdin);
+    ////////// Start of I/O redirection for automation testing
+    // Comment all these lines below if you want to test it manually
+    freopen("Random_tc_generated_load75%.txt","r",stdin);
     //freopen("out.txt","w",stdout);
-    time_t rawtime;
-    time(&rawtime);
-    malloc(sizeof(ctime(&rawtime)));
-    outfilename = ctime(&rawtime);
-    int outfile_len = strlen(outfilename);
-    while (!(outfilename[outfile_len] >= '0' && outfilename[outfile_len] <= '9')) {
-        outfilename[outfile_len] = '\0';
-        outfile_len--;
-    }
-    strcat(outfilename, ".txt");
-    freopen(outfilename, "w", stdout);
-    srand(time(NULL));
-    int value;
+    set_outfilename();
+    freopen(outfilename,"w",stdout);
+    ////////// End of I/O redirection for automation testing
+
+    ////////// Start of Variables Initialization
+    // for input
+    int n,value,x;
     char in[100];
-    char tmp1[50], tmp2[50];
-    int n;
-    scanf("%d", &n);
-    int x;
-    hashtable storage[100];
-    for(x=0;x<hashtable_size;x++)
-    {
-        storage[x].item = 0;
-    }
-    clock_t start, end;
+    char tmp1[50],tmp2[50];
+    hashtable_init();
+    // clock init
+    srand(time(NULL));
+    clock_t start,end;
     double cpu_time_used;
-    int debug = 0;
-    start = clock();
-    for (x = 0; x < n; x++) {
-        scanf("%s %s %d", tmp1, tmp2, &value);
-        strcat(tmp1, " ");
-        strcat(tmp1, tmp2);
-        strcpy(in, tmp1);
-        int hashed_value = bsdChecksumFromstr(in);
+    ////////// End of Variables Initialization
+
+
+    ////////// Start of Setting the initial hashtable
+    scanf("%d",&n);
+    start=clock();
+    for(x=0;x<n;x++)
+    {
+        ////////// Start of input scanning and parsing
+        scanf("%s %s %d",tmp1,tmp2,&value);
+        strcat(tmp1," ");
+        strcat(tmp1,tmp2);
+        strcpy(in,tmp1);
+        ////////// End of input scanning and parsing
+        insert_into_hashtable(in,value);
     }
+    end=clock();
+    cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
+    printf("Number of clashes: %d\n",num_clash);
+    //printList(&storage[clash_max_idx]);
+    printf("Time used to map the value: %.8lf\n",cpu_time_used);
+    ////////// End of Setting the initial hashtable
     return 0;
 }

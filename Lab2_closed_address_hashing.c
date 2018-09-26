@@ -21,6 +21,7 @@ int bsdChecksumFromstr(char *input) /* The file handle for input data */
 
 typedef struct _listnode
 {
+    char key[100];
     char name[100];
     int item;
     struct _listnode *next;
@@ -39,8 +40,8 @@ typedef struct _linkedlist
 void printList(LinkedList *ll);
 void removeAllItems(LinkedList *ll);
 ListNode *findNode(LinkedList *ll, int index);
-ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison);
-int insertNode(LinkedList *ll, int index, int value,char* name);
+ListNode *search_key_in_Node(LinkedList *ll, char *key, int *num_of_comparison);
+int insertNode(LinkedList *ll, int index,char* key, int value,char* name);
 int removeNode(LinkedList *ll, int index);
 
 //////////////////////// HashTable FUNCTIONS ///////////////////////////////////////////
@@ -61,7 +62,7 @@ void hashtable_init()
 // Clash checking init, use if needed
 int clash_max=0,clash_max_idx=0,num_clash=0;
 
-void insert_into_hashtable(char *key,int data1)
+void insert_into_hashtable(char *key,int data1,char* data2)
 {
     int hashed_value=bsdChecksumFromstr(key);
     //printf("hashed into: %d\n",hashed_value); // for debug only
@@ -83,7 +84,7 @@ void insert_into_hashtable(char *key,int data1)
     ////////// End of Clash checking
 
 
-    int insert_status=insertNode(ll,ll->size,data1,&key[0]);
+    int insert_status=insertNode(ll,ll->size,&key[0],data1,data2);
     // Error occured
     if(insert_status==-1)
     {
@@ -97,10 +98,10 @@ void search_in_hashtable(char * key)
     int hashed_value=bsdChecksumFromstr(key);
     int cmp_num=0;
     LinkedList *ll = &storage[hashed_value];
-    ListNode *tmp = search_name_in_Node(ll,key,&cmp_num);
+    ListNode *tmp = search_key_in_Node(ll, key, &cmp_num);
     if(tmp!=NULL)
     {
-        printf("%s is found with value of %d\n",tmp->name,tmp->item);
+        printf("Matriculation id %s with name %s is found with value of %d\n",tmp->key ,tmp->name,tmp->item);
         printf("%d comparison performed\n",cmp_num);
     }
     else
@@ -147,7 +148,7 @@ int main() {
     ////////// Start of Variables Initialization
     // for input
 	int n,value,x;
-    char in[100];
+    char in[100],full_name[100];
     char tmp1[50],tmp2[50];
     hashtable_init();
     // clock init
@@ -163,12 +164,12 @@ int main() {
     for(x=0;x<n;x++)
     {
         ////////// Start of input scanning and parsing
-        scanf("%s %s %d",tmp1,tmp2,&value);
+        scanf("%s %s %s %d",in,tmp1,tmp2,&value);
         strcat(tmp1," ");
         strcat(tmp1,tmp2);
-        strcpy(in,tmp1);
+        strcpy(full_name,tmp1);
         ////////// End of input scanning and parsing
-        insert_into_hashtable(in,value);
+        insert_into_hashtable(in,value,full_name);
     }
 	end=clock();
 	cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
@@ -182,7 +183,7 @@ int main() {
 
     ////////// Start of I/O redirection for automation testing
     // Comment all these lines below if you want to test it manually
-	freopen("Random_fail_query_generated.txt","r",stdin); 
+	freopen("Random_success_query_generated.txt","r",stdin);
 	//freopen("Random_query_generated.txt","r",stdin);
     ////////// End of I/O redirection for automation testing
 
@@ -190,10 +191,7 @@ int main() {
 	start=clock();
 	for(x=0;x<n;x++)
     {
-        scanf("%s %s",tmp1,tmp2);
-        strcat(tmp1," ");
-        strcat(tmp1,tmp2);
-        strcpy(in,tmp1);
+        scanf("%s",in);
         search_in_hashtable(in);
     }
     end=clock();
@@ -264,7 +262,7 @@ ListNode *findNode(LinkedList *ll, int index){
     return temp;
 }
 
-ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison)
+ListNode *search_key_in_Node(LinkedList *ll, char *name, int *num_of_comparison)
 {
 	ListNode *temp;
 
@@ -278,7 +276,7 @@ ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison)
         (*num_of_comparison)++;
 		if (temp == NULL)
             return NULL;
-        if(strcmp(temp->name,name)==0)
+        if(strcmp(temp->key,name)==0)
         {
         	return temp;
 		}
@@ -287,7 +285,7 @@ ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison)
     return temp;
 }
 
-int insertNode(LinkedList *ll, int index, int value,char* name){
+int insertNode(LinkedList *ll, int index,char* key, int value,char* name){
 
     ListNode *pre, *cur;
 
@@ -299,6 +297,7 @@ int insertNode(LinkedList *ll, int index, int value,char* name){
         cur = ll->head;
         ll->head = malloc(sizeof(ListNode));
         ll->head->item = value;
+        strcpy(ll->head->key,key);
         strcpy(ll->head->name,name);
         ll->head->next = cur;
         ll->size++;
@@ -311,6 +310,7 @@ int insertNode(LinkedList *ll, int index, int value,char* name){
         cur = pre->next;
         pre->next = malloc(sizeof(ListNode));
         pre->next->item = value;
+        strcpy(pre->next->key,key);
         strcpy(pre->next->name,name);
         pre->next->next = cur;
         ll->size++;

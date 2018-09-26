@@ -23,7 +23,8 @@ using namespace std;
 
 char seed1[100000][50];
 char seed2[100000][50];
-map<pii,bool> double_check;
+map<pii,bool> double_check_name;
+map<string,bool> double_check_matric;
 
 void matric_randomizer(char* matric_num)
 {
@@ -65,13 +66,19 @@ int main()
         {
             b=rand()%x+1;
         }
-        if(double_check[mp(a,b)]==1||strcmp(seed1[a],"")==0||strcmp(seed2[b],"")==0)
+        if(double_check_name[mp(a,b)]==1||strcmp(seed1[a],"")==0||strcmp(seed2[b],"")==0)
         {
             y--;
             continue;
         }
         score=rand()%100+1;
-        double_check[mp(a,b)]=1;
+        double_check_name[mp(a,b)]=1;
+        matric_randomizer(matric_num);
+        while(double_check_matric[(string)matric_num])
+        {
+            matric_randomizer(matric_num);
+        }
+        double_check_matric[(string)matric_num]=1;
         printf("%s %s %s %d\n",matric_num,seed1[a],seed2[b],score);
     }
     return 0;
