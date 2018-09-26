@@ -91,7 +91,7 @@ void search_in_hashtable(char * key)
         }
         if(tmp->status==1&&strcmp(tmp->key,key)==0)
         {
-            printf("Matriculation id %s with name %s is found with value of %d\n",tmp->key ,tmp->name,tmp->item);
+            printf("%s is found with value of %d\n",tmp->name,tmp->item);
             printf("%d comparison performed\n",cmp_num);
             cmp_total+=cmp_num;
             return;
@@ -102,7 +102,7 @@ void search_in_hashtable(char * key)
         cmp_num++;
         tmp=&storage[linear_probing_value];
     }
-    printf("%s is not found!\n",key);
+    printf("not found!\n",key);
     printf("%d comparison performed\n",cmp_num);
     cmp_total+=cmp_num;
     return;
@@ -179,8 +179,8 @@ int main() {
 
     ////////// Start of I/O redirection for automation testing
     // Comment all these lines below if you want to test it manually
-    freopen("Random_fail_query_generated.txt","r",stdin);
-    //freopen("Random_success_query_generated.txt","r",stdin);
+    freopen("Random_fail_query_generated_new.txt","r",stdin);
+    //freopen("Random_success_query_generated_new.txt","r",stdin);
     ////////// End of I/O redirection for automation testing
 
     scanf("%d",&n);
