@@ -3,6 +3,8 @@
 #include <string.h>
 #include <time.h>
 
+//////////////////////// hash function ///////////////////////////////////////////
+
 int bsdChecksumFromstr(char *input) /* The file handle for input data */
 {
     int checksum = 0;             /* The checksum mod 2^16. */
@@ -15,7 +17,7 @@ int bsdChecksumFromstr(char *input) /* The file handle for input data */
     return checksum;
 }
 
-// TAKEN FROM CZ1007
+//////////////////////// LinkedList, based on CZ1007 /////////////////////////////
 
 typedef struct _listnode
 {
@@ -41,9 +43,76 @@ ListNode *search_name_in_Node(LinkedList *ll,char* name,int* num_of_comparison);
 int insertNode(LinkedList *ll, int index, int value,char* name);
 int removeNode(LinkedList *ll, int index);
 
-int hashtable_size = 1<<16;
+//////////////////////// HashTable FUNCTIONS ///////////////////////////////////////////
 
-//////////////////////// SUB FUNCTIONS ///////////////////////////////////////////
+#define hashtable_size 1<<16
+
+LinkedList storage[hashtable_size];
+void hashtable_init()
+{
+    int x;
+    for(x=0;x<hashtable_size;x++)
+    {
+        storage[x].head = NULL;
+        storage[x].size = 0;
+    }
+}
+
+// Clash checking init, use if needed
+int clash_max=0,clash_max_idx=0,num_clash=0;
+
+void insert_into_hashtable(char *key,int data1)
+{
+    int hashed_value=bsdChecksumFromstr(key);
+    //printf("hashed into: %d\n",hashed_value); // for debug only
+    LinkedList *ll = &storage[hashed_value];
+    //printf("\"%s\"",in); // for debug only
+
+
+    ////////// Start of Clash checking, use if needed
+    if(ll->size>0)
+    {
+        //printf("clash %d!\n",ll->size);
+        num_clash++;
+        if(clash_max<ll->size)
+        {
+            clash_max=ll->size;
+            clash_max_idx=hashed_value;
+        }
+    }
+    ////////// End of Clash checking
+
+
+    int insert_status=insertNode(ll,ll->size,data1,&key[0]);
+    // Error occured
+    if(insert_status==-1)
+    {
+        printf("Caution: Insert Fail!\n");
+    }
+}
+
+int cmp_total=0;
+void search_in_hashtable(char * key)
+{
+    int hashed_value=bsdChecksumFromstr(key);
+    int cmp_num=0;
+    LinkedList *ll = &storage[hashed_value];
+    ListNode *tmp = search_name_in_Node(ll,key,&cmp_num);
+    if(tmp!=NULL)
+    {
+        printf("%s is found with value of %d\n",tmp->name,tmp->item);
+        printf("%d comparison performed\n",cmp_num);
+    }
+    else
+    {
+        printf("%s is not found!\n",key);
+        printf("%d comparison performed\n",cmp_num);
+    }
+    cmp_total+=cmp_num;
+    //printList(&storage[hashed_value]);
+}
+
+//////////////////////// OTHER FUNCTIONS ///////////////////////////////////////////
 
 // Set the output file name to contain current time timestamp
 char* outfilename;
@@ -62,6 +131,7 @@ void set_outfilename()
     strcat(outfilename,".txt");
 }
 
+
 //////////////////////// MAIN FUNCTION ///////////////////////////////////////////
 
 
@@ -74,25 +144,16 @@ int main() {
 	freopen(outfilename,"w",stdout);
     ////////// End of I/O redirection for automation testing
 
-
     ////////// Start of Variables Initialization
     // for input
-	int n,value;
+	int n,value,x;
     char in[100];
     char tmp1[50],tmp2[50];
-    // hashtable init
-    LinkedList storage[hashtable_size];
-    int x;
-	for(x=0;x<hashtable_size;x++)
-    {
-        storage[x].head = NULL;
-        storage[x].size = 0;
-    }
+    hashtable_init();
     // clock init
     srand(time(NULL));
     clock_t start,end;
     double cpu_time_used;
-    int clash_check[hashtable_size],clash_max=0,clash_max_idx=0;  // to count no. of clash if neeeded
     ////////// End of Variables Initialization
 
 
@@ -101,33 +162,17 @@ int main() {
     start=clock();
     for(x=0;x<n;x++)
     {
+        ////////// Start of input scanning and parsing
         scanf("%s %s %d",tmp1,tmp2,&value);
         strcat(tmp1," ");
         strcat(tmp1,tmp2);
         strcpy(in,tmp1);
-        int hashed_value=bsdChecksumFromstr(in);
-        //printf("hashed into: %d\n",hashed_value);
-        LinkedList *ll = &storage[hashed_value];
-        //printf("\"%s\"",in);
-        /*clash_check[hashed_value]=clash_check[hashed_value]+1;
-        if(ll->size>0)
-        {
-        	//printf("clash %d!\n",ll->size);
-        	if(clash_max<ll->size)
-			{
-				clash_max=ll->size;
-				clash_max_idx=hashed_value;
-			}
-		}*/
-        int insert_status=insertNode(ll,ll->size,value,&in[0]);
-        // Error occured
-        if(insert_status==-1)
-        {
-        	printf("Insert Fail!\n");
-		}
+        ////////// End of input scanning and parsing
+        insert_into_hashtable(in,value);
     }
 	end=clock();
 	cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
+    printf("Number of clashes: %d\n",num_clash);
 	//printList(&storage[clash_max_idx]);
 	printf("Time used to map the value: %.8lf\n",cpu_time_used);
     ////////// End of Setting the initial hashtable
@@ -143,31 +188,13 @@ int main() {
 
 	scanf("%d",&n);
 	start=clock();
-	int cmp_total=0;
 	for(x=0;x<n;x++)
     {
         scanf("%s %s",tmp1,tmp2);
         strcat(tmp1," ");
         strcat(tmp1,tmp2);
         strcpy(in,tmp1);
-        int hashed_value=bsdChecksumFromstr(in);
-        // Search dummy
-        int cmp_num=0;
-        LinkedList *ll = &storage[hashed_value];
-		ListNode *tmp = search_name_in_Node(ll,in,&cmp_num);
-        if(tmp!=NULL)
-        {
-        	printf("%s is found with value of %d\n",tmp->name,tmp->item);
-        	printf("%d comparison performed\n",cmp_num);
-		}
-		else
-		{
-			printf("%s is not found!\n",in);
-			printf("%d comparison performed\n",cmp_num);
-		}
-		cmp_total+=cmp_num;
-		//printList(&storage[hashed_value]);
-        
+        search_in_hashtable(in);
     }
     end=clock();
     cpu_time_used = ((double) (end - start)) /(double) CLOCKS_PER_SEC;
