@@ -36,25 +36,27 @@ void matric_randomizer(char* matric_num)
     matric_num[9]='\0';
 }
 map<string,bool> double_check_matric;
+char vocal[10]="aiueo";
 char matric_num_list[100010][100];
+char seed1[100010][100];
+char seed2[100010][100];
 
 int main()
 {
     freopen("Random_tc_generated_load75%.txt","r",stdin);
-    freopen("Random_fail_query_generated.txt","w",stdout);
-    //freopen("Random_success_query_generated.txt","w",stdout);
+    //freopen("Random_fail_query_generated_new.txt","w",stdout);
+    freopen("Random_success_query_generated_new.txt","w",stdout);
     int x=1;
     int gen_needed=100000;
     bool successful=1;
     int dummy;
-    char seed1[100],seed2[100];
     char matric_num[100];
     printf("%d\n",gen_needed);
     int n;
     scanf("%d",&n);
     for(x=1;x<=n;x++)
     {
-        scanf("%s %s %s %d",matric_num_list[x],seed1,seed2,&dummy);
+        scanf("%s %s %s %d",matric_num_list[x],seed1[x],seed2[x],&dummy);
         double_check_matric[(string)matric_num_list[x]]=1;
         //printf("%s %s\n",seed1[x],seed2[x]);
     }
@@ -62,12 +64,12 @@ int main()
     int y=0;
     for(y=0;y<gen_needed;y++)
     {
-
+        int a=rand()%n+1;
+        int b=a;
         if(successful)
         {
-            int a=rand()%n+1;
             //choose any ppl randomly in list
-            printf("%s\n",matric_num_list[a]);
+            printf("%s %s %s\n",matric_num_list[a],seed1[a],seed2[b]);
         }
         else
         {
@@ -77,7 +79,11 @@ int main()
             {
                 matric_randomizer(matric_num);
             }
-            printf("%s\n",matric_num);
+            while(b==a)
+            {
+                b=rand()%x+1;
+            }
+            printf("%s %s %s%c\n",matric_num,seed1[a],seed2[b],vocal[rand()%5]);
         }
     }
     return 0;
