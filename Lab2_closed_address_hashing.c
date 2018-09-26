@@ -44,11 +44,23 @@ int removeNode(LinkedList *ll, int index);
 int hashtable_size = 1<<16;
 
 //////////////////////// MAIN FUNCTION ///////////////////////////////////////////
+char* outfilename;
 
 int main() {
 	freopen("Random_tc_generated_load75%.txt","r",stdin); 
  	//freopen("out.txt","w",stdout);
-	freopen("out1.txt","w",stdout);
+	time_t rawtime;
+  	time (&rawtime);
+	malloc(sizeof(ctime(&rawtime)));
+	outfilename=ctime(&rawtime);
+	int outfile_len=strlen(outfilename);
+	while(!(outfilename[outfile_len]>='0'&&outfilename[outfile_len]<='9'))
+	{
+		outfilename[outfile_len]='\0';
+		outfile_len--;
+	}
+	strcat(outfilename,".txt");
+	freopen(outfilename,"w",stdout);
 	srand(time(NULL));
 	int value;
     char in[100];
